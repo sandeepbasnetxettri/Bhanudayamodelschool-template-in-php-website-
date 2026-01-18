@@ -98,7 +98,7 @@ try {
                         <img src="../../images/school-logo.png" alt="School Logo" class="logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%234CAF50%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22white%22%3ES%3C/text%3E%3C/svg%3E'">
                         <div class="school-info">
                             <h1>Bhanudaya Secondary School</h1>
-                            <p class="tagline">Building Tomorrow's Leaders Today</p>
+                            <p class="tagline"></p>
                         </div>
                     </div>
                     <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -114,6 +114,16 @@ try {
                     <li><a href="../../index.php">Home</a></li>
                     <li class="dropdown">
                         <a href="#">Academics <i class="fas fa-chevron-down"></i></a>
+                        <li class="dropdown">
+                        <a href="#">About <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="pages/history.php">History</a></li>
+                            <li><a href="pages/vision-mission.php">Vision & Mission</a></li>
+                            <li><a href="pages/principal-message.php">Principal's Message</a></li>
+                            <li><a href="pages/faculty.php">Faculty</a></li>
+                            <li><a href="pages/management.php">Management</a></li>
+                        </ul>
+                    </li>
                         <ul class="dropdown-menu">
                             <li><a href="../../pages/timetable.html">Class Timetable</a></li>
                             <li><a href="../../pages/courses.html">Courses</a></li>
