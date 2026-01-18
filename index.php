@@ -92,7 +92,6 @@ session_start();
                         </ul>
                     </li>
                     <li><a href="pages/notice.php">Notice Board</a></li>
-                    <li><a href="pages/courses.php">Courses</a></li>
                     <li><a href="pages/gallery.php">Gallery</a></li>
                     <li><a href="pages/contact.php">Contact</a></li>
                 </ul>
