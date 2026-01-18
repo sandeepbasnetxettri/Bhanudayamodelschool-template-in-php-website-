@@ -29,11 +29,17 @@ try {
     
     // Transform the data to match what the frontend expects
     $formattedNotices = array_map(function($notice) {
+        // Ensure date is in the right format
+        $date = $notice['date'];
+        if ($date && !strtotime($date)) {  // If date is not in a valid format
+            $date = date('Y-m-d H:i:s'); // Use current timestamp as fallback
+        }
+        
         return [
             'id' => $notice['id'],
             'title' => $notice['title'],
             'description' => $notice['content'],
-            'date' => $notice['date'],
+            'date' => $date,
             'type' => $notice['type'], // Raw type for proper mapping in frontend
             'image' => 'images/news-default.jpg' // Default image for notices
         ];

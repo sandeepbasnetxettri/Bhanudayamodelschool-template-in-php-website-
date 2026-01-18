@@ -12,11 +12,25 @@ async function loadNoticeBoard() {
     noticeBoard.innerHTML = '<p class="no-data">Loading notices...</p>';
     
     try {
+        console.log('Fetching notices from API...');
         const response = await fetch('../api/get-notices.php');
+        console.log('API response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('API response data:', data);
         
         if (data.success && data.notices) {
             const notices = data.notices;
+            console.log(`Loaded ${notices.length} notices from API`);
+            
+            if (notices.length === 0) {
+                noticeBoard.innerHTML = '<p class="no-data">No notices available at the moment.</p>';
+                return;
+            }
             
             const html = notices.map(notice => {
                 const displayType = mapNoticeType(notice.type);
@@ -35,8 +49,9 @@ async function loadNoticeBoard() {
                 `;
             }).join('');
 
-            noticeBoard.innerHTML = html || '<p class="no-data">No notices available at the moment.</p>';
+            noticeBoard.innerHTML = html;
         } else {
+            console.error('API response did not contain success or notices:', data);
             noticeBoard.innerHTML = '<p class="no-data">No notices available at the moment.</p>';
         }
     } catch (error) {
@@ -86,9 +101,24 @@ function mapNoticeType(dbType) {
         'administrative': 'Notice',
         'event': 'Event',
         'holiday': 'Holiday',
-        'general': 'Notice'
+        'general': 'Notice',
+        'achievement': 'Achievement'
     };
     return typeMap[dbType] || 'Notice';
+}
+
+function formatDate(dateString) {
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    } catch (e) {
+        console.error('Error formatting date:', dateString, e);
+        return dateString;
+    }
 }
 
 // Add notice page specific styles

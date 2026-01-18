@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notice Board - Excellence School</title>
+    <title>Notice Board - Bhanudaya Secondary School</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/pages.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -120,12 +120,9 @@
                 <div class="footer-col">
                     <h3>Contact Info</h3>
                     <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> Binayi Triveni Rural Municipality, Dumkibas, Nawalaparasi, Nepal
-</li>
-                        <li><i class="fas fa-phone"></i> +977-78-620134
-</li>
-                        <li><i class="fas fa-envelope"></i> bhanudayahss071@gmail.com
-</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Binayi Triveni Rural Municipality, Dumkibas, Nawalaparasi, Nepal</li>
+                        <li><i class="fas fa-phone"></i> +977-78-620134</li>
+                        <li><i class="fas fa-envelope"></i> bhanudayahss071@gmail.com</li>
                         <li><i class="fas fa-clock"></i> Sun-Fri: 9:00 AM - 4:00 PM</li>
                     </ul>
                 </div>
