@@ -99,6 +99,7 @@
                 </div>
                 
                 <div class="notice-search">
+                    <h3>Search Notices:</h3>
                     <input type="text" id="searchInput" placeholder="Search by title, content, or date..." class="search-input">
                 </div>
             </div>
