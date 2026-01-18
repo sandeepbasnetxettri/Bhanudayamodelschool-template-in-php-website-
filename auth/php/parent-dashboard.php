@@ -113,7 +113,6 @@ try {
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="../../index.php">Home</a></li>
                     <li class="dropdown">
-                        <a href="#">Academics <i class="fas fa-chevron-down"></i></a>
                         <li class="dropdown">
                         <a href="#">About <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
@@ -123,7 +122,17 @@ try {
                             <li><a href="pages/faculty.php">Faculty</a></li>
                             <li><a href="pages/management.php">Management</a></li>
                         </ul>
+                    <li class="dropdown">
+                        <a href="#">Academics <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="pages/courses.php">Courses Offered</a></li>
+                            <li><a href="pages/computer-science.php">+2 Computer Science</a></li>
+                            <li><a href="pages/hotel-management.php">+2 Hotel Management</a></li>
+                            <li><a href="pages/timetable.php">Class Timetable</a></li>
+                            <li><a href="pages/calendar.php">Academic Calendar</a></li>
+                        </ul>
                     </li>
+                        
                         <ul class="dropdown-menu">
                             <li><a href="../../pages/timetable.html">Class Timetable</a></li>
                             <li><a href="../../pages/courses.html">Courses</a></li>
