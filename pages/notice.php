@@ -86,14 +86,21 @@
 
     <section class="page-content">
         <div class="container">
-            <div class="notice-filter">
-                <h3>Filter by Category:</h3>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-type="all">All</button>
-                    <button class="filter-btn" data-type="Notice">Notices</button>
-                    <button class="filter-btn" data-type="Event">Events</button>
-                    <button class="filter-btn" data-type="Achievement">Achievements</button>
-                    <button class="filter-btn" data-type="Holiday">Holidays</button>
+            <div class="notice-controls">
+                <div class="notice-filter">
+                    <h3>Filter by Category:</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-type="all">All</button>
+                        <button class="filter-btn" data-type="Notice">Notices</button>
+                        <button class="filter-btn" data-type="Event">Events</button>
+                        <button class="filter-btn" data-type="Achievement">Achievements</button>
+                        <button class="filter-btn" data-type="Holiday">Holidays</button>
+                    </div>
+                </div>
+                
+                <div class="notice-search">
+                    <h3>Search Notices:</h3>
+                    <input type="text" id="searchInput" placeholder="Search by title, content, or date..." class="search-input">
                 </div>
             </div>
 

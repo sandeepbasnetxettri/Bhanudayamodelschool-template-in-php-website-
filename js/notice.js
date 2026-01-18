@@ -35,8 +35,12 @@ async function loadNoticeBoard() {
             const html = notices.map(notice => {
                 const displayType = mapNoticeType(notice.type);
                 const badgeColor = getBadgeColor(notice.type);
+                const imageUrl = notice.image || 'images/news-default.jpg';
                 return `
                     <div class="notice-item" data-type="${displayType}">
+                        ${notice.image ? `<div class="notice-image">
+                            <img src="${imageUrl}" alt="${notice.title}" onerror="this.src='images/news-default.jpg';this.onerror=null;">
+                        </div>` : ''}
                         <div class="notice-header">
                             <div class="notice-title">${notice.title}</div>
                             <div class="notice-meta">
@@ -62,23 +66,54 @@ async function loadNoticeBoard() {
 
 function setupNoticeFilter() {
     const filterBtns = document.querySelectorAll('.notice-filter .filter-btn');
+    const searchInput = document.getElementById('searchInput');
     
+    // Filter by type functionality
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            const type = btn.dataset.type;
-            const noticeItems = document.querySelectorAll('.notice-item');
-            
-            noticeItems.forEach(item => {
-                if (type === 'all' || item.dataset.type === type) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            applyFilters();
         });
+    });
+    
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            applyFilters();
+        });
+    }
+}
+
+function applyFilters() {
+    const activeFilter = document.querySelector('.notice-filter .filter-btn.active');
+    const selectedType = activeFilter ? activeFilter.dataset.type : 'all';
+    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    
+    const noticeItems = document.querySelectorAll('.notice-item');
+    
+    noticeItems.forEach(item => {
+        const itemType = item.dataset.type;
+        const titleText = item.querySelector('.notice-title')?.textContent.toLowerCase() || '';
+        const contentText = item.querySelector('.notice-content')?.textContent.toLowerCase() || '';
+        const dateText = item.querySelector('.notice-date')?.textContent.toLowerCase() || '';
+        
+        // Check type filter
+        const typeMatch = selectedType === 'all' || itemType === selectedType;
+        
+        // Check search term
+        const searchMatch = !searchTerm || 
+                           titleText.includes(searchTerm) || 
+                           contentText.includes(searchTerm) || 
+                           dateText.includes(searchTerm);
+        
+        // Apply visibility based on both filters
+        if (typeMatch && searchMatch) {
+            item.classList.remove('hidden');
+        } else {
+            item.classList.add('hidden');
+        }
     });
 }
 
@@ -123,12 +158,21 @@ function formatDate(dateString) {
 
 // Add notice page specific styles
 const noticeStyles = `
-    .notice-filter {
+    .notice-controls {
         background: var(--white);
         padding: 25px;
         border-radius: 10px;
         box-shadow: var(--shadow);
         margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .notice-filter {
+        flex: 1;
+        min-width: 300px;
     }
 
     .notice-filter h3 {
@@ -141,6 +185,32 @@ const noticeStyles = `
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
+    }
+
+    .notice-search {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .notice-search h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: var(--dark-text);
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
     }
 
     .notices-container .notice-item {
@@ -195,6 +265,17 @@ const noticeStyles = `
         white-space: nowrap;
     }
 
+    .notices-container .notice-image {
+        margin-bottom: 15px;
+    }
+
+    .notices-container .notice-image img {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
     .notices-container .notice-content {
         color: var(--dark-text);
         line-height: 1.8;
@@ -208,7 +289,16 @@ const noticeStyles = `
         font-size: 18px;
     }
 
+    .notice-item.hidden {
+        display: none;
+    }
+
     @media (max-width: 768px) {
+        .notice-controls {
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .notices-container .notice-header {
             flex-direction: column;
         }

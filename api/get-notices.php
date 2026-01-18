@@ -15,7 +15,7 @@ try {
     // 3. If end_date is set, it should be >= today (or end_date is null)
     $today = date('Y-m-d');
     
-    $query = "SELECT id, title, content, notice_type as type, created_at as date 
+    $query = "SELECT id, title, content, notice_type as type, image_url, created_at as date 
               FROM notices 
               WHERE is_published = 1 
               AND (start_date IS NULL OR start_date <= ?) 
@@ -41,7 +41,7 @@ try {
             'description' => $notice['content'],
             'date' => $date,
             'type' => $notice['type'], // Raw type for proper mapping in frontend
-            'image' => 'images/news-default.jpg' // Default image for notices
+            'image' => $notice['image_url'] ?: 'images/news-default.jpg' // Use image from DB or default
         ];
     }, $notices);
     

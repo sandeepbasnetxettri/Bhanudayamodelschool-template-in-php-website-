@@ -23,6 +23,7 @@ if (isset($_POST['create_notice'])) {
     $startDate = $_POST['start_date'];
     $endDate = $_POST['end_date'];
     $isPublished = isset($_POST['is_published']) ? 1 : 0;
+    $imageUrl = !empty($_POST['image_url']) ? trim($_POST['image_url']) : null;
     
     // Validate input
     if (empty($title) || empty($content) || empty($noticeType)) {
@@ -33,8 +34,8 @@ if (isset($_POST['create_notice'])) {
             $targetAudienceJson = json_encode($targetAudience);
             
             // Create new notice
-            $stmt = $pdo->prepare("INSERT INTO notices (title, content, notice_type, posted_by, target_audience, start_date, end_date, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $content, $noticeType, $_SESSION['user_id'], $targetAudienceJson, $startDate, $endDate, $isPublished]);
+            $stmt = $pdo->prepare("INSERT INTO notices (title, content, notice_type, posted_by, target_audience, start_date, end_date, is_published, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $content, $noticeType, $_SESSION['user_id'], $targetAudienceJson, $startDate, $endDate, $isPublished, $imageUrl]);
             
             $message = "Notice created successfully.";
         } catch (PDOException $e) {
@@ -53,6 +54,7 @@ if (isset($_POST['update_notice'])) {
     $startDate = $_POST['start_date'];
     $endDate = $_POST['end_date'];
     $isPublished = isset($_POST['is_published']) ? 1 : 0;
+    $imageUrl = !empty($_POST['image_url']) ? trim($_POST['image_url']) : null;
     
     // Validate input
     if (empty($title) || empty($content) || empty($noticeType)) {
@@ -63,8 +65,8 @@ if (isset($_POST['update_notice'])) {
             $targetAudienceJson = json_encode($targetAudience);
             
             // Update notice
-            $stmt = $pdo->prepare("UPDATE notices SET title = ?, content = ?, notice_type = ?, target_audience = ?, start_date = ?, end_date = ?, is_published = ? WHERE id = ?");
-            $stmt->execute([$title, $content, $noticeType, $targetAudienceJson, $startDate, $endDate, $isPublished, $noticeId]);
+            $stmt = $pdo->prepare("UPDATE notices SET title = ?, content = ?, notice_type = ?, target_audience = ?, start_date = ?, end_date = ?, is_published = ?, image_url = ? WHERE id = ?");
+            $stmt->execute([$title, $content, $noticeType, $targetAudienceJson, $startDate, $endDate, $isPublished, $imageUrl, $noticeId]);
             
             $message = "Notice updated successfully.";
         } catch (PDOException $e) {
@@ -90,7 +92,7 @@ if (isset($_POST['delete_notice'])) {
 
 // Fetch all notices for display
 try {
-    $stmt = $pdo->query("SELECT id, title, notice_type, target_audience, start_date, end_date, is_published, created_at FROM notices ORDER BY created_at DESC");
+    $stmt = $pdo->query("SELECT id, title, notice_type, target_audience, start_date, end_date, is_published, image_url, created_at FROM notices ORDER BY created_at DESC");
     $notices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
@@ -453,7 +455,8 @@ $userEmail = $_SESSION['user_email'];
                                         data-audience="<?php echo htmlspecialchars($notice['target_audience']); ?>"
                                         data-start="<?php echo htmlspecialchars($notice['start_date'] ?? ''); ?>"
                                         data-end="<?php echo htmlspecialchars($notice['end_date'] ?? ''); ?>"
-                                        data-published="<?php echo $notice['is_published']; ?>">
+                                        data-published="<?php echo $notice['is_published']; ?>"
+                                        data-image-url="<?php echo htmlspecialchars($notice['image_url'] ?? ''); ?>">
                                     <i class="fas fa-edit"></i> Edit
                                 </button>
                                 <button class="btn btn-outline btn-small delete-notice" 
@@ -486,6 +489,11 @@ $userEmail = $_SESSION['user_email'];
                 <div class="form-group">
                     <label for="create_content">Content *</label>
                     <textarea id="create_content" name="content" class="form-control" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="create_image_url">Image URL (optional)</label>
+                    <input type="url" id="create_image_url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg">
                 </div>
                 
                 <div class="form-row">
@@ -576,6 +584,11 @@ $userEmail = $_SESSION['user_email'];
                 <div class="form-group">
                     <label for="edit_content">Content *</label>
                     <textarea id="edit_content" name="content" class="form-control" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_image_url">Image URL (optional)</label>
+                    <input type="url" id="edit_image_url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg">
                 </div>
                 
                 <div class="form-row">
@@ -731,6 +744,7 @@ $userEmail = $_SESSION['user_email'];
                     const startDate = this.getAttribute('data-start');
                     const endDate = this.getAttribute('data-end');
                     const isPublished = this.getAttribute('data-published');
+                    const imageUrl = this.getAttribute('data-image-url');
                     
                     // Parse audience JSON
                     let audience = [];
@@ -749,6 +763,7 @@ $userEmail = $_SESSION['user_email'];
                     document.getElementById('edit_start_date').value = startDate;
                     document.getElementById('edit_end_date').value = endDate;
                     document.getElementById('edit_is_published').checked = isPublished == '1';
+                    document.getElementById('edit_image_url').value = imageUrl || '';
                     
                     // Reset checkboxes
                     document.getElementById('edit_audience_students').checked = false;
