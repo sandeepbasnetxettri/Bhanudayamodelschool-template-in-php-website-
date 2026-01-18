@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Setup - Bhanudaya Secondary School</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .btn-success {
+            background-color: #27ae60;
+        }
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gallery Setup for Bhanudaya Secondary School</h1>
+        
+        <div class="info-box">
+            <h3>Setup Instructions</h3>
+            <p>This page provides easy access to gallery setup utilities for the Bhanudaya Secondary School website.</p>
+        </div>
+        
+        <div class="button-container">
+            <a href="check_gallery_table.php" class="btn btn-success">Check Gallery Table Status</a>
+            <a href="test_gallery.php" class="btn">Test Local Gallery Images</a>
+            <a href="pages/gallery.php" class="btn btn-warning">View Gallery Page</a>
+        </div>
+        
+        <div class="button-container">
+            <a href="manage_gallery.php" class="btn">Manage Gallery (Admin Only)</a>
+            <a href="api/get-gallery-items.php" class="btn">Test Gallery API</a>
+        </div>
+        
+        <h2>About Gallery Setup</h2>
+        <p>The gallery system has been enhanced to work with local images stored in the <code>/Gallery</code> folder. The system now:</p>
+        <ul>
+            <li>Uses local images from the Gallery folder (1.jpg to 47.jpg)</li>
+            <li>Has improved fallback mechanisms if API fails</li>
+            <li>Provides better error handling for missing images</li>
+            <li>Includes a management interface for administrators</li>
+        </ul>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.php" class="btn">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
