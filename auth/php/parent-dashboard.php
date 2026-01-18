@@ -132,10 +132,17 @@ try {
                             <li><a href="pages/calendar.php">Academic Calendar</a></li>
                         </ul>
                     </li>
-                        
+                        </li>
+                     <li class="dropdown">
+                        <a href="#">Admissions <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="../../pages/timetable.html">Class Timetable</a></li>
-                            <li><a href="../../pages/courses.html">Courses</a></li>
+                            <li><a href="admission.php">Admission Process</a></li>
+                            <li><a href="fee-structure.php" class="active">Fee Structure</a></li>
+                        </ul>
+                    </li>
+                        <ul class="dropdown-menu">
+                            <li><a href="pages/timetable.php">Class Timetable</a></li>
+                            <li><a href="pages/courses.php">Courses</a></li>
                             <li><a href="#">Progress Reports</a></li>
                             <li><a href="#">Attendance</a></li>
                         </ul>
