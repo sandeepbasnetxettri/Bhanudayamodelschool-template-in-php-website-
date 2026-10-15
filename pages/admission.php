@@ -240,7 +240,8 @@
             <div class="admission-form-section">
                 <h2>Online Admission Form</h2>
                 <div class="form-container">
-                    <form id="admissionForm">
+                    <form id="admissionForm" action="https://api.web3forms.com/submit" method="POST"  id="contact-form">
+                        <input type="hidden" name="access_key" value="1e38443c-d4cd-43e0-badb-d71795689d9e">
                         <h3>Student Information</h3>
                         <div class="form-row">
                             <div class="form-group">
@@ -345,7 +346,7 @@
                                 <i class="fas fa-redo"></i> Reset Form
                             </button>
                         </div>
-                    </form>
+                    <form id="contactForm">
                 </div>
 
                 <div class="download-section">
@@ -382,22 +383,19 @@
                     <h3>About Us</h3>
                     <p>Excellence School is committed to providing quality education and nurturing young minds for a successful future.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61571984150477"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@kazidon10"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/codebykazi/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@KaziGamingKG"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                
                 <div class="footer-col">
                     <h3>Contact Info</h3>
                     <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> Binayi Triveni Rural Municipality, Dumkibas, Nawalaparasi, Nepal
-</li>
-                        <li><i class="fas fa-phone"></i> +977-78-620134
-</li>
-                        <li><i class="fas fa-envelope"></i> bhanudayahss071@gmail.com
-</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Binayi Triveni Rural Municipality, Dumkibas, Nawalaparasi, Nepal</li>
+                        <li><i class="fas fa-phone"></i> +977-78-620134</li>
+                        <li><i class="fas fa-envelope"></i> bhanudayahss071@gmail.com</li>
                         <li><i class="fas fa-clock"></i> Sun-Fri: 9:00 AM - 4:00 PM</li>
                     </ul>
                 </div>

@@ -608,12 +608,12 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <h3>About Us</h3>
-                    <p>Bhanudaya Secondary School is committed to providing quality education and nurturing young minds for a successful future.</p>
+                    <p>Excellence School is committed to providing quality education and nurturing young minds for a successful future.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61571984150477"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@kazidon10"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/codebykazi/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@KaziGamingKG"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                
@@ -633,7 +633,7 @@
     <script src="../js/main.js"></script>
     <script>
         // Add 3D tilt effect to cards
-        document.addEventListener('DOMContentLoaded', function() {
+         document.addEventListener('DOMContentLoaded', function() {
             // Add mouse move listeners for 3D tilt effects
             const cards = document.querySelectorAll('.payment-card, .discount-card');
             
@@ -671,7 +671,7 @@
             
             // Add subtle animation to elements on page load
             const highlights = document.querySelectorAll('.fee-highlight, .important-note, .refund-policy');
-            highlights.forEach((element, index) => {
+            highlights.forEach(element, index) => {
                 // Apply initial styles
                 element.style.opacity = '0';
                 element.style.transform = 'translateY(20px)';

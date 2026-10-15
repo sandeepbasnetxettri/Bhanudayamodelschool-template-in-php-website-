@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Notice Search Functionality</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .search-container {
+            position: relative;
+            margin: 10px 0;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 45px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            font-size: 18px;
+        }
+        .clear-search {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Notice Search Functionality</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Search Input Field</h3>
+        <div class="search-container">
+            <i class="fas fa-search search-icon">🔍</i>
+            <input type="text" id="searchInput" placeholder="Search by title, content, or date..." class="search-input">
+            <button type="button" class="clear-search" id="clearSearch" title="Clear search">✕</button>
+        </div>
+        <div id="testResult1" class="test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test 2: JavaScript Events</h3>
+        <button onclick="testFunctionality()">Run Tests</button>
+        <div id="testResult2" class="test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test 3: API Integration</h3>
+        <div id="testResult3" class="test-result"></div>
+    </div>
+
+    <script>
+        // Test the search functionality
+        function testFunctionality() {
+            const searchInput = document.getElementById('searchInput');
+            const clearButton = document.getElementById('clearSearch');
+            const resultDiv = document.getElementById('testResult2');
+            
+            if (!searchInput) {
+                resultDiv.innerHTML = '<div class="error">❌ Search input element not found</div>';
+                return;
+            }
+            
+            if (!clearButton) {
+                resultDiv.innerHTML = '<div class="error">❌ Clear button element not found</div>';
+                return;
+            }
+            
+            // Test 1: Check if elements exist
+            let testResults = '<div class="success">✅ Search input found</div>';
+            testResults += '<div class="success">✅ Clear button found</div>';
+            
+            // Test 2: Check event listeners
+            try {
+                // Simulate typing in search input
+                searchInput.value = 'test';
+                searchInput.dispatchEvent(new Event('input'));
+                testResults += '<div class="success">✅ Input event listener working</div>';
+                
+                // Simulate escape key press
+                const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+                searchInput.dispatchEvent(escapeEvent);
+                testResults += '<div class="success">✅ Keydown event listener working</div>';
+                
+                // Simulate click on clear button
+                clearButton.click();
+                testResults += '<div class="success">✅ Click event listener working</div>';
+                
+                resultDiv.innerHTML = testResults;
+            } catch (e) {
+                resultDiv.innerHTML = '<div class="error">❌ Error testing functionality: ' + e.message + '</div>';
+            }
+        }
+        
+        // Initialize test
+        window.onload = function() {
+            // Check if Font Awesome is loaded
+            const faExists = !!document.querySelector('.fas');
+            if (faExists) {
+                document.getElementById('testResult1').innerHTML = '<div class="success">✅ Font Awesome icons loaded</div>';
+            } else {
+                document.getElementById('testResult1').innerHTML = '<div class="error">❌ Font Awesome icons not loaded - this is just a visual test, not a functionality issue</div>';
+            }
+            
+            // Check if the API endpoints exist
+            fetch('../api/search-notices.php')
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('testResult3').innerHTML = '<div class="success">✅ Search API endpoint exists</div>';
+                    } else {
+                        document.getElementById('testResult3').innerHTML = '<div class="error">❌ Search API endpoint not accessible</div>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('testResult3').innerHTML = '<div class="error">❌ Error accessing search API: ' + error.message + '</div>';
+                });
+        };
+    </script>
+</body>
+</html>

@@ -7,9 +7,147 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
     exit;
 }
 
+// Database connection
+require_once '../../config/dbconnection.php';
+
 // Get user info from session
 $userName = $_SESSION['user_name'];
 $userEmail = $_SESSION['user_email'];
+
+// Get student ID from session user_id
+$userId = $_SESSION['user_id'];
+
+// Get student details
+try {
+    $stmt = $pdo->prepare("SELECT * FROM students WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $student = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$student) {
+        // If student not found by user_id, try by email
+        $stmt = $pdo->prepare("SELECT * FROM students WHERE email = ?");
+        $stmt->execute([$userEmail]);
+        $student = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$student) {
+            header('Location: login.php');
+            exit;
+        }
+    }
+} catch (PDOException $e) {
+    // If students table doesn't exist, redirect to login
+    header('Location: login.php');
+    exit;
+}
+
+// Function to calculate average grade for a student
+function getAverageGrade($pdo, $studentId) {
+    try {
+        $stmt = $pdo->prepare("SELECT AVG(percentage) as avg_percentage FROM results WHERE student_id = ?");
+        $stmt->execute([$studentId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['avg_percentage'] ? round($result['avg_percentage'], 2) : 0;
+    } catch (PDOException $e) {
+        return 0; // Return 0 if results table doesn't exist yet
+    }
+}
+
+// Function to calculate attendance rate for a student
+function getAttendanceRate($pdo, $studentId) {
+    try {
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total_days FROM attendance WHERE student_id = ?");
+        $stmt->execute([$studentId]);
+        $totalDays = $stmt->fetch(PDO::FETCH_ASSOC)['total_days'];
+        
+        if ($totalDays == 0) return 0;
+        
+        $stmt = $pdo->prepare("SELECT COUNT(*) as present_days FROM attendance WHERE student_id = ? AND status = 'present'");
+        $stmt->execute([$studentId]);
+        $presentDays = $stmt->fetch(PDO::FETCH_ASSOC)['present_days'];
+        
+        return $totalDays > 0 ? round(($presentDays / $totalDays) * 100, 2) : 0;
+    } catch (PDOException $e) {
+        return 0; // Return 0 if attendance table doesn't exist yet
+    }
+}
+
+// Function to get upcoming assignments for a student
+function getUpcomingAssignments($pdo, $studentId) {
+    try {
+        $stmt = $pdo->prepare(
+            "SELECT a.title as assignment_title, a.due_date, 
+            s.subject_name, c.class_name 
+            FROM assignments a 
+            LEFT JOIN subjects s ON a.subject_id = s.id 
+            LEFT JOIN classes c ON a.class_id = c.id 
+            LEFT JOIN enrollments e ON e.class_id = c.id 
+            WHERE e.student_id = ? AND a.due_date >= CURDATE() 
+            ORDER BY a.due_date ASC LIMIT 5"
+        );
+        $stmt->execute([$studentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        return []; // Return empty array if assignments table doesn't exist yet
+    }
+}
+
+// Get actual student data
+$studentId = $student['id'];
+$averageGrade = getAverageGrade($pdo, $studentId);
+$attendanceRate = getAttendanceRate($pdo, $studentId);
+$upcomingAssignments = getUpcomingAssignments($pdo, $studentId);
+$coursesEnrolled = 0; // This would need to be calculated based on enrollments
+
+// Calculate number of courses enrolled
+try {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as course_count FROM enrollments WHERE student_id = ?");
+    $stmt->execute([$studentId]);
+    $coursesEnrolled = $stmt->fetch(PDO::FETCH_ASSOC)['course_count'];
+} catch (PDOException $e) {
+    $coursesEnrolled = 0;
+}
+
+// Count pending assignments
+$pendingAssignments = count($upcomingAssignments);
+
+// Get today's schedule
+function getTodaysSchedule($pdo, $studentId) {
+    try {
+        $stmt = $pdo->prepare(
+            "SELECT s.subject_name, c.schedule, c.room_number 
+            FROM enrollments e 
+            JOIN classes c ON e.class_id = c.id 
+            JOIN subjects s ON c.subject_id = s.id 
+            WHERE e.student_id = ? AND DAYOFWEEK(CURDATE()) = SUBSTRING_INDEX(c.schedule, ' ', -1) + 1 
+            ORDER BY c.schedule"
+        );
+        $stmt->execute([$studentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        return []; // Return empty array if schedule table doesn't exist yet
+    }
+}
+
+$todaysSchedule = getTodaysSchedule($pdo, $studentId);
+
+// Get recent notices for students
+function getRecentNotices($pdo) {
+    try {
+        $stmt = $pdo->prepare(
+            "SELECT title, created_at FROM notices 
+            WHERE (target_audience = 'all' OR target_audience LIKE '%students%' OR target_audience LIKE '%all%') 
+            AND is_published = 1 
+            ORDER BY created_at DESC LIMIT 5"
+        );
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        return []; // Return empty array if notices table doesn't exist yet
+    }
+}
+
+$recentNotices = getRecentNotices($pdo);
+
 ?>
 
 <!DOCTYPE html>
@@ -65,22 +203,22 @@ $userEmail = $_SESSION['user_email'];
                 <div class="stat-card">
                     <i class="fas fa-book"></i>
                     <h3>Courses Enrolled</h3>
-                    <p>6</p>
+                    <p><?php echo $coursesEnrolled; ?></p>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-tasks"></i>
                     <h3>Pending Assignments</h3>
-                    <p>3</p>
+                    <p><?php echo $pendingAssignments; ?></p>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-chart-line"></i>
                     <h3>Average Grade</h3>
-                    <p>85%</p>
+                    <p><?php echo $averageGrade; ?>%</p>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-calendar-check"></i>
                     <h3>Attendance Rate</h3>
-                    <p>92%</p>
+                    <p><?php echo $attendanceRate; ?>%</p>
                 </div>
             </div>
 
@@ -91,21 +229,21 @@ $userEmail = $_SESSION['user_email'];
                     </div>
                     <div class="widget-content">
                         <ul class="schedule-list">
-                            <li>
-                                <span class="time">09:00 - 10:00</span>
-                                <span class="subject">Mathematics</span>
-                                <span class="room">Room 101</span>
-                            </li>
-                            <li>
-                                <span class="time">10:15 - 11:15</span>
-                                <span class="subject">Science</span>
-                                <span class="room">Lab 2</span>
-                            </li>
-                            <li>
-                                <span class="time">11:30 - 12:30</span>
-                                <span class="subject">English</span>
-                                <span class="room">Room 205</span>
-                            </li>
+                            <?php if (!empty($todaysSchedule)): ?>
+                                <?php foreach ($todaysSchedule as $class): ?>
+                                <li>
+                                    <span class="time"><?php echo htmlspecialchars($class['schedule'] ?? 'TBD'); ?></span>
+                                    <span class="subject"><?php echo htmlspecialchars($class['subject_name'] ?? 'N/A'); ?></span>
+                                    <span class="room"><?php echo htmlspecialchars($class['room_number'] ?? 'TBD'); ?></span>
+                                </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li>
+                                    <span class="time">-</span>
+                                    <span class="subject">No classes scheduled for today</span>
+                                    <span class="room">-</span>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
@@ -116,21 +254,23 @@ $userEmail = $_SESSION['user_email'];
                     </div>
                     <div class="widget-content">
                         <ul class="assignments-list">
-                            <li>
-                                <span class="assignment-title">Math Homework #5</span>
-                                <span class="due-date">Due: Dec 20</span>
-                                <span class="priority high">High</span>
-                            </li>
-                            <li>
-                                <span class="assignment-title">Science Project</span>
-                                <span class="due-date">Due: Dec 22</span>
-                                <span class="priority medium">Medium</span>
-                            </li>
-                            <li>
-                                <span class="assignment-title">English Essay</span>
-                                <span class="due-date">Due: Dec 25</span>
-                                <span class="priority low">Low</span>
-                            </li>
+                            <?php if (!empty($upcomingAssignments)): ?>
+                                <?php foreach ($upcomingAssignments as $assignment): ?>
+                                <li>
+                                    <span class="assignment-title"><?php echo htmlspecialchars($assignment['assignment_title'] ?? 'N/A'); ?></span>
+                                    <span class="due-date">Due: <?php echo date('M j', strtotime($assignment['due_date'])); ?></span>
+                                    <span class="priority <?php echo (strtotime($assignment['due_date']) - time() < 86400 * 3) ? 'high' : ((strtotime($assignment['due_date']) - time() < 86400 * 7) ? 'medium' : 'low'); ?>">
+                                        <?php echo (strtotime($assignment['due_date']) - time() < 86400 * 3) ? 'Urgent' : ((strtotime($assignment['due_date']) - time() < 86400 * 7) ? 'Soon' : 'Normal'); ?>
+                                    </span>
+                                </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li>
+                                    <span class="assignment-title">No pending assignments</span>
+                                    <span class="due-date">-</span>
+                                    <span class="priority low">None</span>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
@@ -141,18 +281,19 @@ $userEmail = $_SESSION['user_email'];
                     </div>
                     <div class="widget-content">
                         <ul class="notices-list">
-                            <li>
-                                <span class="notice-title">Annual Sports Day - Dec 28</span>
-                                <span class="notice-date">Posted 2 days ago</span>
-                            </li>
-                            <li>
-                                <span class="notice-title">Library Timing Changes</span>
-                                <span class="notice-date">Posted 1 week ago</span>
-                            </li>
-                            <li>
-                                <span class="notice-title">Exam Schedule Published</span>
-                                <span class="notice-date">Posted 2 weeks ago</span>
-                            </li>
+                            <?php if (!empty($recentNotices)): ?>
+                                <?php foreach ($recentNotices as $notice): ?>
+                                <li>
+                                    <span class="notice-title"><?php echo htmlspecialchars($notice['title'] ?? 'Untitled Notice'); ?></span>
+                                    <span class="notice-date">Posted <?php echo date('M j', strtotime($notice['created_at'])); ?></span>
+                                </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li>
+                                    <span class="notice-title">No recent notices</span>
+                                    <span class="notice-date">-</span>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
@@ -178,10 +319,10 @@ $userEmail = $_SESSION['user_email'];
                     <h3>About Us</h3>
                     <p>Excellence School is committed to providing quality education and nurturing young minds for a successful future.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61571984150477"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@kazidon10"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/codebykazi/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@KaziGamingKG"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 

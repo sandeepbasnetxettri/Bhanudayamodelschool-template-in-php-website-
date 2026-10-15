@@ -98,10 +98,6 @@
                     </div>
                 </div>
                 
-                <div class="notice-search">
-                    <h3>Search Notices:</h3>
-                    <input type="text" id="searchInput" placeholder="Search by title, content, or date..." class="search-input">
-                </div>
             </div>
 
             <div class="notices-container" id="noticeBoard">
@@ -117,10 +113,10 @@
                     <h3>About Us</h3>
                     <p>Excellence School is committed to providing quality education and nurturing young minds for a successful future.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61571984150477"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@kazidon10"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/codebykazi/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@KaziGamingKG"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                

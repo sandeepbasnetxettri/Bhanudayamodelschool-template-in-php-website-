@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Notice Search Test</title>
+    <link rel='stylesheet' href='./css/style.css'>
+    <link rel='stylesheet' href='./css/pages.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
+</head>
+<body>
+    <div class='container' style='padding: 20px;'>
+        <h1>Notice Search Functionality Test</h1>
+        <div class='notice-search'>
+            <h3>Search Notices:</h3>
+            <div class='search-container'>
+                <i class='fas fa-search search-icon'></i>
+                <input type='text' id='searchInput' placeholder='Search by title, content, or date...' class='search-input'>
+                <button type='button' class='clear-search' id='clearSearch' title='Clear search'>
+                    <i class='fas fa-times'></i>
+                </button>
+            </div>
+        </div>
+        <div id='searchResults' style='margin-top: 20px;'>
+            <p>Enter a search term above to test the search functionality.</p>
+        </div>
+    </div>
+
+    <script>
+        // Test the search functionality
+        const searchInput = document.getElementById('searchInput');
+        const clearButton = document.getElementById('clearSearch');
+        const searchResults = document.getElementById('searchResults');
+
+        // Debounced search to improve performance
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(searchInput.value);
+            }, 300); // 300ms delay
+        });
+
+        // Clear search functionality
+        clearButton.addEventListener('click', () => {
+            searchInput.value = '';
+            clearButton.style.display = 'none';
+            searchResults.innerHTML = '<p>Search cleared. Enter a new search term.</p>';
+            // Trigger search with empty term
+            performSearch('');
+        });
+
+        // Show/hide clear button based on input
+        searchInput.addEventListener('input', () => {
+            clearButton.style.display = searchInput.value ? 'block' : 'none';
+        });
+
+        // Initialize clear button visibility
+        clearButton.style.display = searchInput.value ? 'block' : 'none';
+
+        function performSearch(searchTerm) {
+            if (!searchTerm.trim()) {
+                searchResults.innerHTML = '<p>Enter a search term above to test the search functionality.</p>';
+                return;
+            }
+
+            // Make AJAX request to test the search API
+            fetch('./api/search-notices.php?search=' + encodeURIComponent(searchTerm))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.notices && data.notices.length > 0) {
+                            let html = '<h3>Search Results for: "' + searchTerm + '"</h3>';
+                            html += '<p>Found ' + data.count + ' notice(s).</p>';
+                            html += '<div style="max-height: 400px; overflow-y: auto;">';
+                            data.notices.forEach(notice => {
+                                html += '<div style="border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 5px;">';
+                                html += '<h4>' + notice.title + '</h4>';
+                                html += '<p><strong>Type:</strong> ' + notice.type + ' | <strong>Date:</strong> ' + notice.date + '</p>';
+                                html += '<p><strong>Description:</strong> ' + notice.description.substring(0, 200) + (notice.description.length > 200 ? '...' : '') + '</p>';
+                                html += '</div>';
+                            });
+                            html += '</div>';
+                            searchResults.innerHTML = html;
+                        } else {
+                            searchResults.innerHTML = '<p>No notices match your search: "' + searchTerm + '"</p>';
+                        }
+                    } else {
+                        searchResults.innerHTML = '<p>Error: ' + (data.error || 'Unknown error occurred') + '</p>';
+                    }
+                })
+                .catch(error => {
+                    searchResults.innerHTML = '<p>Error performing search: ' + error.message + '</p>';
+                    console.error('Search error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

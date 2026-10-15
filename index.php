@@ -87,8 +87,8 @@ session_start();
                      <li class="dropdown">
                         <a href="#">Admissions <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="admission.php">Admission Process</a></li>
-                            <li><a href="fee-structure.php" class="active">Fee Structure</a></li>
+                            <li><a href="pages/admission.php">Admission Process</a></li>
+                            <li><a href="pages/fee-structure.php" class="active">Fee Structure</a></li>
                         </ul>
                     </li>
                     <li><a href="pages/notice.php">Notice Board</a></li>
@@ -211,10 +211,10 @@ session_start();
                     <h3>About Us</h3>
                     <p>Excellence School is committed to providing quality education and nurturing young minds for a successful future.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61571984150477"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.tiktok.com/@kazidon10"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.instagram.com/codebykazi/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@KaziGamingKG"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 

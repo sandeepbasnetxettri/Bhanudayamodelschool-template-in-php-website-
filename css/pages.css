@@ -653,17 +653,89 @@ table tr:hover td strong {
 
 .search-input {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 12px 45px 12px 45px;
+    border: 2px solid var(--light-bg);
+    border-radius: 30px;
     font-size: 16px;
     transition: all 0.3s;
+    position: relative;
+    background-color: var(--white);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .search-input:focus {
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2), inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--light-text);
+    font-size: 18px;
+    z-index: 1;
+}
+
+.clear-search {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--light-text);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    font-size: 18px;
+    transition: all 0.3s;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clear-search:hover {
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.notice-search h3 {
+    color: var(--primary-color);
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Additional search enhancements */
+.search-container.search-active {
+    position: relative;
+}
+
+.search-results-counter {
+    padding: 10px;
+    background: var(--light-bg);
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.search-highlight {
+    background-color: #ffeb3b;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
 }
 
 .notice-item {
@@ -737,6 +809,13 @@ table tr:hover td strong {
 
 .notice-item.hidden {
     display: none;
+}
+
+.search-highlight {
+    background-color: #ffeb3b;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
